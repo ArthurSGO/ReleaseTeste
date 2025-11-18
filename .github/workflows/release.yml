@@ -1,0 +1,27 @@
+name: Gerar Release em ZIP
+
+on:
+  workflow_dispatch:
+    inputs:
+      versao:
+        description: 'Digite a versão do release'
+        required: true
+
+jobs:
+  criar-zip:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Verificar o repositório
+        uses: actions/checkout@v4
+
+      - name: Compactar arquivos
+        run: zip -r projeto.zip . -x ".git/*" ".github/*"
+
+      - name: Criar Release no GitHub
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ inputs.versao }}
+          files: projeto.zip
